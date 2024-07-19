@@ -1,8 +1,13 @@
 package com.bansal.project.ridewave.ridewaveApp.Entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.locationtech.jts.geom.Point;
 
 @Entity
+@Getter
+@Setter
 public class Driver {
 
     @Id
@@ -16,5 +21,8 @@ public class Driver {
     private Double rating;
 
     private Boolean available;
+
+    @Column(columnDefinition = "Geometry(Point, 4326)")
+    private Point currentLocation;
 
 }

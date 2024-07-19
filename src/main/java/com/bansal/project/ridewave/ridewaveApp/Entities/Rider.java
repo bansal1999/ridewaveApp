@@ -1,8 +1,12 @@
 package com.bansal.project.ridewave.ridewaveApp.Entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Rider {
 
     @Id

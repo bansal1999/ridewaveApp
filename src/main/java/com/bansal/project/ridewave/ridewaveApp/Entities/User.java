@@ -2,15 +2,19 @@ package com.bansal.project.ridewave.ridewaveApp.Entities;
 
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.Role;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "app_user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private  Long id;
+    private Long id;
 
     private String name;
     @Column(unique = true)
