@@ -5,7 +5,10 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
+import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
+import com.bansal.project.ridewave.ridewaveApp.Strategies.DriverMatchingStrategy;
+import com.bansal.project.ridewave.ridewaveApp.Strategies.RideFareCalculationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -19,12 +22,22 @@ import java.util.List;
 public class RiderServiceImplementation implements RiderService {
 
     private final ModelMapper modelMapper;
+    private final RideFareCalculationStrategy rideFareCalculationStrategy;
+    private final DriverMatchingStrategy driverMatchingStrategy;
+    private final RideRequestRepository rideRequestRepository;
 
     @Override
     public RideRequestDTO requestRide(RideRequestDTO rideRequestDTO) {
         RideRequest rideRequest = modelMapper.map(rideRequestDTO, RideRequest.class);
         log.info(rideRequest.toString());
-        return null;
+
+        Double fare = rideFareCalculationStrategy.calculateFare(rideRequest);
+        rideRequest.setFare(fare);
+
+        RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
+        driverMatchingStrategy.findMatchingDrivers(rideRequest);
+
+        return modelMapper.map(savedRideRequest, RideRequestDTO.class);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.bansal.project.ridewave.ridewaveApp.Entities;
 
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentMethod;
-import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideRequestStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
