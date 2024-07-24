@@ -5,6 +5,7 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.SignupDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.UserDTO;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.Role;
 import com.bansal.project.ridewave.ridewaveApp.Entities.User;
+import com.bansal.project.ridewave.ridewaveApp.Exceptions.RuntimeConflictException;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.UserRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.AuthService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
@@ -28,10 +29,9 @@ public class AuthServiceImplementation implements AuthService {
 
     @Override
     public UserDTO signup(SignupDTO signupDTO) {
-        User user = userRepository.findByEmail(signupDTO.getEmail());
-        if (user != null) {
-            throw new RuntimeException("User already exists with this email");
-        }
+        userRepository.findByEmail(signupDTO.getEmail()).orElseThrow(() ->
+                new RuntimeConflictException("User already exists with this email " + signupDTO.getEmail()));
+
 
         User mappedUser = modelMapper.map(signupDTO, User.class);
         mappedUser.setRoles(Set.of(Role.RIDER));
@@ -40,7 +40,7 @@ public class AuthServiceImplementation implements AuthService {
         // create user related enitities
         riderService.createNerRider(savedUser);
 
-//        TODO: ADD WALLET RELEATED SERVICE
+//        TODO: ADD WALLET RELATED SERVICE
 
         return modelMapper.map(savedUser, UserDTO.class);
     }
