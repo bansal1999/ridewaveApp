@@ -4,6 +4,8 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.DriverDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
+import com.bansal.project.ridewave.ridewaveApp.Entities.User;
 
 import java.util.List;
 
@@ -18,6 +20,8 @@ public interface RiderService {
     RiderDTO getMyProfile();
 
     List<RideDTO> getAllMyRides();
+
+    Rider createNerRider(User user);
 
 
 }

@@ -5,7 +5,10 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
+import com.bansal.project.ridewave.ridewaveApp.Entities.User;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepository;
+import com.bansal.project.ridewave.ridewaveApp.Repositories.RiderRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.DriverMatchingStrategy;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideFareCalculationStrategy;
@@ -25,6 +28,7 @@ public class RiderServiceImplementation implements RiderService {
     private final RideFareCalculationStrategy rideFareCalculationStrategy;
     private final DriverMatchingStrategy driverMatchingStrategy;
     private final RideRequestRepository rideRequestRepository;
+    private final RiderRepository riderRepository;
 
     @Override
     public RideRequestDTO requestRide(RideRequestDTO rideRequestDTO) {
@@ -58,5 +62,15 @@ public class RiderServiceImplementation implements RiderService {
     @Override
     public List<RideDTO> getAllMyRides() {
         return null;
+    }
+
+    @Override
+    public Rider createNerRider(User user) {
+        Rider rider = Rider
+                .builder()
+                .user(user)
+                .rating(0.0)
+                .build();
+        return riderRepository.save(rider);
     }
 }
