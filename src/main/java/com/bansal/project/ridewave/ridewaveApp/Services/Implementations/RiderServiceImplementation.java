@@ -11,10 +11,13 @@ import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepositor
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RiderRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.DriverMatchingStrategy;
+import com.bansal.project.ridewave.ridewaveApp.Strategies.Implementations.RiderFareSurgePricingFareCalculationStrategy;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideFareCalculationStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

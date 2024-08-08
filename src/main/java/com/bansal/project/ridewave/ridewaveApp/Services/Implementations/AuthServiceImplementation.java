@@ -29,9 +29,10 @@ public class AuthServiceImplementation implements AuthService {
 
     @Override
     public UserDTO signup(SignupDTO signupDTO) {
-        userRepository.findByEmail(signupDTO.getEmail()).orElseThrow(() ->
-                new RuntimeConflictException("User already exists with this email " + signupDTO.getEmail()));
-
+        User user = userRepository.findByEmail(signupDTO.getEmail()).orElse(null);
+        if (user != null) {
+            throw new RuntimeConflictException("Cannot signup, already exists with email " + signupDTO.getEmail());
+        }
 
         User mappedUser = modelMapper.map(signupDTO, User.class);
         mappedUser.setRoles(Set.of(Role.RIDER));
@@ -50,3 +51,4 @@ public class AuthServiceImplementation implements AuthService {
         return null;
     }
 }
+ 
