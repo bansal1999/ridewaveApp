@@ -4,10 +4,12 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
 import com.bansal.project.ridewave.ridewaveApp.Services.DistanceService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideFareCalculationStrategy;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Primary
 public class RiderDareDefaultFareCalculationStrategy implements RideFareCalculationStrategy {
 
     private final DistanceService distanceService;

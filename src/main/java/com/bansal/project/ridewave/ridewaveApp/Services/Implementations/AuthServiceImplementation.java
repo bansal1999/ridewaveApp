@@ -12,6 +12,7 @@ import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public class AuthServiceImplementation implements AuthService {
     }
 
     @Override
+    @Transactional
     public UserDTO signup(SignupDTO signupDTO) {
         User user = userRepository.findByEmail(signupDTO.getEmail()).orElse(null);
         if (user != null) {
