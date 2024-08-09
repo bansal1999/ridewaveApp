@@ -4,6 +4,7 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.DriverDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Driver;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideRequestStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
@@ -12,15 +13,10 @@ import com.bansal.project.ridewave.ridewaveApp.Exceptions.ResourceNotFoundExcept
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepository;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RiderRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
-import com.bansal.project.ridewave.ridewaveApp.Strategies.DriverMatchingStrategy;
-import com.bansal.project.ridewave.ridewaveApp.Strategies.Implementations.RiderFareSurgePricingFareCalculationStrategy;
-import com.bansal.project.ridewave.ridewaveApp.Strategies.RideFareCalculationStrategy;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideStrategyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,12 +40,15 @@ public class RiderServiceImplementation implements RiderService {
         rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
         rideRequest.setRider(rider);
         log.info(rideRequest.toString());
-
+        //TODO: pickup and drop location are same coordinates -- FIX THAT
         Double fare = rideStrategyManager.getRideFareCalculationStrategy().calculateFare(rideRequest);
         rideRequest.setFare(fare);
 
         RideRequest savedRideRequest = rideRequestRepository.save(rideRequest);
-        rideStrategyManager.getDriverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
+        List<Driver> drivers = rideStrategyManager
+                .getDriverMatchingStrategy(rider.getRating()).findMatchingDrivers(rideRequest);
+
+        // TODO: SEND NOTIFICATION TO ALL THE DRIVERS  about this ride
 
         return modelMapper.map(savedRideRequest, RideRequestDTO.class);
     }

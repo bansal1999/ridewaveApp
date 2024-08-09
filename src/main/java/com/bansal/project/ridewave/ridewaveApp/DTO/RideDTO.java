@@ -2,7 +2,6 @@ package com.bansal.project.ridewave.ridewaveApp.DTO;
 
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentMethod;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,8 +15,8 @@ import java.time.LocalDateTime;
 public class RideDTO {
 
     private Long id;
-    private Point pickupLocation;
-    private Point dropOffLocation;
+    private PointDTO pickupLocation;
+    private PointDTO dropOffLocation;
     private LocalDateTime createdTime;
     private RiderDTO rider;
     private DriverDTO driver;

@@ -22,6 +22,7 @@ INSERT INTO app_user(name, email, password) VALUES
 
 INSERT INTO user_roles (user_id, roles) VALUES
 (1, 'RIDER'),
+(1, 'DRIVER'),
 (2, 'RIDER'),
 (2, 'DRIVER'),
 (3, 'RIDER'),
@@ -47,6 +48,7 @@ INSERT INTO rider (id, user_id, rating) VALUES
 (1, 1, 4.9)
 
 INSERT INTO driver (id, user_id, rating, available, current_location) VALUES
+(1, 1, 4.9, true, ST_GeomFromText('POINT(77.2025 28.6041)', 4326)),
 (3, 3, 4.5, true, ST_GeomFromText('POINT(77.2025 28.6041)', 4326)),
 (4, 4, 4.8, false, ST_GeomFromText('POINT(77.3025 28.7041)', 4326)),
 (5, 5, 4.6, true, ST_GeomFromText('POINT(77.4025 28.8041)', 4326)),
