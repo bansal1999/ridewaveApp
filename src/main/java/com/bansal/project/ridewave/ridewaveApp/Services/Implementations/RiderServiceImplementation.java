@@ -4,6 +4,7 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.DriverDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideRequestStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
 import com.bansal.project.ridewave.ridewaveApp.Entities.User;
@@ -21,6 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,9 +37,12 @@ public class RiderServiceImplementation implements RiderService {
     private final RiderRepository riderRepository;
 
     @Override
+    @Transactional
     public RideRequestDTO requestRide(RideRequestDTO rideRequestDTO) {
         Rider rider = getCurrentRider();
         RideRequest rideRequest = modelMapper.map(rideRequestDTO, RideRequest.class);
+        rideRequest.setRideRequestStatus(RideRequestStatus.PENDING);
+        rideRequest.setRider(rider);
         log.info(rideRequest.toString());
 
         Double fare = rideStrategyManager.getRideFareCalculationStrategy().calculateFare(rideRequest);
