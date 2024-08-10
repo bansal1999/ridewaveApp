@@ -5,6 +5,7 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.Driver;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Ride;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -18,7 +19,7 @@ public interface RideService {
 
     Ride updateRideStatus(Ride ride, RideStatus rideStatus);
 
-    Page<Ride> getAllRidesOfRider(Long riderId, PageRequest pageRequest);
+    Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest);
 
-    Page<Ride> getAllRidesOfDriver(Long driverId, PageRequest pageRequest);
+    Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest);
 }

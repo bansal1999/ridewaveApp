@@ -6,6 +6,7 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideRequestStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Ride;
 import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
 import com.bansal.project.ridewave.ridewaveApp.Exceptions.ResourceNotFoundException;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.RideRequestService;
@@ -57,13 +58,13 @@ public class RideServiceImplementation implements RideService {
     }
 
     @Override
-    public Page<Ride> getAllRidesOfRider(Long riderId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
+        return rideRepository.findByRider(rider, pageRequest);
     }
 
     @Override
-    public Page<Ride> getAllRidesOfDriver(Long driverId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
+        return rideRepository.findByDriver(driver, pageRequest);
     }
 
     private String generateRandomOTP() {

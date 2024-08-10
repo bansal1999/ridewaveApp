@@ -116,7 +116,7 @@ public class DriverServiceImplementation implements DriverService {
     public Page<RideDTO> getAllMyRides(PageRequest pageRequest) {
 
         Driver currentDriver = getCurrentDriver();
-        return rideService.getAllRidesOfDriver(currentDriver.getId(), pageRequest).map(
+        return rideService.getAllRidesOfDriver(currentDriver, pageRequest).map(
                 ride -> modelMapper.map(ride, RideDTO.class)
         );
     }
