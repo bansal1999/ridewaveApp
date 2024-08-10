@@ -4,6 +4,8 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.DriverDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Driver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -20,8 +22,10 @@ public interface DriverService {
 
     DriverDTO getMyProfile();
 
-    List<RideDTO> getAllMyRides();
+    Page<RideDTO> getAllMyRides(PageRequest pageRequest);
 
     Driver getCurrentDriver();
+
+    Driver updateDriverAvailability(Driver driver, boolean availability);
 
 }

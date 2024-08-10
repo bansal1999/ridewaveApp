@@ -4,19 +4,21 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.DriverDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
-import com.bansal.project.ridewave.ridewaveApp.Entities.Driver;
+import com.bansal.project.ridewave.ridewaveApp.Entities.*;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideRequestStatus;
-import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
-import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
-import com.bansal.project.ridewave.ridewaveApp.Entities.User;
+import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
 import com.bansal.project.ridewave.ridewaveApp.Exceptions.ResourceNotFoundException;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepository;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RiderRepository;
+import com.bansal.project.ridewave.ridewaveApp.Services.DriverService;
+import com.bansal.project.ridewave.ridewaveApp.Services.RideService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideStrategyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,8 @@ public class RiderServiceImplementation implements RiderService {
     private final RideStrategyManager rideStrategyManager;
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
+    private final RideService rideService;
+    private final DriverService driverService;
 
     @Override
     @Transactional
@@ -55,7 +59,21 @@ public class RiderServiceImplementation implements RiderService {
 
     @Override
     public RideDTO cancelRide(Long rideId) {
-        return null;
+        Rider currentRider = getCurrentRider();
+        Ride ride = rideService.getRideById(rideId);
+
+        if (!currentRider.equals(ride.getRider())) {
+            throw new IllegalStateException("Rider does not own this ride" + rideId);
+        }
+
+        if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
+            throw new RuntimeException("Ride Status is not confirmed " + ride.getRideStatus());
+        }
+
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+        driverService.updateDriverAvailability(ride.getDriver(), true);
+
+        return modelMapper.map(savedRide, RideDTO.class);
     }
 
     @Override
@@ -65,12 +83,16 @@ public class RiderServiceImplementation implements RiderService {
 
     @Override
     public RiderDTO getMyProfile() {
-        return null;
+        Rider currentRider = getCurrentRider();
+        return modelMapper.map(currentRider, RiderDTO.class);
     }
 
     @Override
-    public List<RideDTO> getAllMyRides() {
-        return null;
+    public Page<RideDTO> getAllMyRides(PageRequest pageRequest) {
+        Rider currentRider = getCurrentRider();
+        return rideService.getAllRidesOfRider(currentRider.getId(), pageRequest).map(
+                ride -> modelMapper.map(ride, RideDTO.class)
+        );
     }
 
     @Override
@@ -86,7 +108,6 @@ public class RiderServiceImplementation implements RiderService {
     @Override
     public Rider getCurrentRider() {
         //TODO IMPLEMENTATION SPRING SECURITY
-
         return riderRepository.findById(1L).orElseThrow(() -> new ResourceNotFoundException(
                 "No rider with ID: " + 1
         ));

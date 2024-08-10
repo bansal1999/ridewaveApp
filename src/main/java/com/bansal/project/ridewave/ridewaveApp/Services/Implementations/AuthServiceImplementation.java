@@ -40,7 +40,7 @@ public class AuthServiceImplementation implements AuthService {
         mappedUser.setRoles(Set.of(Role.RIDER));
         User savedUser = userRepository.save(mappedUser);
 
-        // create user related enitities
+        // create user related entities
         riderService.createNerRider(savedUser);
 
 //        TODO: ADD WALLET RELATED SERVICE

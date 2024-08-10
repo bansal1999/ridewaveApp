@@ -6,6 +6,8 @@ import com.bansal.project.ridewave.ridewaveApp.DTO.RideRequestDTO;
 import com.bansal.project.ridewave.ridewaveApp.DTO.RiderDTO;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Rider;
 import com.bansal.project.ridewave.ridewaveApp.Entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ public interface RiderService {
 
     RiderDTO getMyProfile();
 
-    List<RideDTO> getAllMyRides();
+    Page<RideDTO> getAllMyRides(PageRequest pageRequest);
 
     Rider createNerRider(User user);
 

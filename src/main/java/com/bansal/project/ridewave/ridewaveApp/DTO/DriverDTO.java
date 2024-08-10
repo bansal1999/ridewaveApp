@@ -13,5 +13,10 @@ public class DriverDTO {
 
     private Double rating;
 
+    private Boolean available;
+
+    private String vehicleId;
+
+    private Long id;
 
 }
