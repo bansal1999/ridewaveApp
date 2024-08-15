@@ -3,11 +3,17 @@ package com.bansal.project.ridewave.ridewaveApp.Entities;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.TransactionMethod;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.TransactionType;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class WalletTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

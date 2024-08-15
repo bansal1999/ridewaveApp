@@ -7,8 +7,6 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.Driver;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-
 public interface DriverService {
 
     RideDTO acceptRide(Long rideRequestId);

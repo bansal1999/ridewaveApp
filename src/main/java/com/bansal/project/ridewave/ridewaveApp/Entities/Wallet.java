@@ -1,9 +1,17 @@
 package com.bansal.project.ridewave.ridewaveApp.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Wallet {
 
@@ -11,13 +19,13 @@ public class Wallet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
     @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<WalletTransaction> transactions;
 
-    private Double balance;
+    private Double balance = 0.0;
 
 
 }

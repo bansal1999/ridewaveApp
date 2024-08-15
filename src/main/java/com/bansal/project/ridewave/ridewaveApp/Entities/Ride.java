@@ -3,10 +3,7 @@ package com.bansal.project.ridewave.ridewaveApp.Entities;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentMethod;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.RideStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.locationtech.jts.geom.Point;
 
@@ -17,6 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
