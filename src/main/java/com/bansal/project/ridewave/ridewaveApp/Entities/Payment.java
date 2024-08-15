@@ -3,10 +3,7 @@ package com.bansal.project.ridewave.ridewaveApp.Entities;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentMethod;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 public class Payment {
 
     @Id

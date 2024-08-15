@@ -11,6 +11,7 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.RideRequest;
 import com.bansal.project.ridewave.ridewaveApp.Exceptions.ResourceNotFoundException;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.DriverRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.DriverService;
+import com.bansal.project.ridewave.ridewaveApp.Services.PaymentService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RideRequestService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RideService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class DriverServiceImplementation implements DriverService {
     private final DriverRepository driverRepository;
     private final RideService rideService;
     private final ModelMapper modelMapper;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -48,6 +50,8 @@ public class DriverServiceImplementation implements DriverService {
         Driver savedDriver = updateDriverAvailability(currentDriver, false);
 
         Ride ride = rideService.createNewRide(rideRequest, savedDriver);
+
+
         return modelMapper.map(ride, RideDTO.class);
     }
 
@@ -82,7 +86,7 @@ public class DriverServiceImplementation implements DriverService {
         }
 
         if (!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
-            throw new RuntimeException("Ride Status is not confrimed " + ride.getRideStatus());
+            throw new RuntimeException("Ride Status is not confirmed " + ride.getRideStatus());
         }
 
         if (!OTP.equals(ride.getOtp())) {
@@ -90,13 +94,31 @@ public class DriverServiceImplementation implements DriverService {
         }
         ride.setStartedAt(LocalDateTime.now());
         Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ONGOING);
-        return modelMapper.map(savedRide, RideDTO.class);
 
+        paymentService.createNewPayment(savedRide);
+        return modelMapper.map(savedRide, RideDTO.class);
     }
 
     @Override
+    @Transactional
     public RideDTO endRide(Long rideId) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Driver driver = getCurrentDriver();
+
+        if (!driver.equals(ride.getDriver())) {
+            throw new RuntimeException("Ride does not belong to current Driver");
+        }
+
+        if (!ride.getRideStatus().equals(RideStatus.ONGOING)) {
+            throw new RuntimeException("Ride Status is not ongoing " + ride.getRideStatus());
+        }
+
+        ride.setEndedAt(LocalDateTime.now());
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.ENDED);
+        updateDriverAvailability(driver, true);
+
+        paymentService.processPayment(ride);
+        return modelMapper.map(savedRide, RideDTO.class);
     }
 
     @Override

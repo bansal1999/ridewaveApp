@@ -9,6 +9,7 @@ import com.bansal.project.ridewave.ridewaveApp.Exceptions.RuntimeConflictExcepti
 import com.bansal.project.ridewave.ridewaveApp.Repositories.UserRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.AuthService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
+import com.bansal.project.ridewave.ridewaveApp.Services.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class AuthServiceImplementation implements AuthService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final RiderService riderService;
+    private final WalletService walletService;
 
     @Override
     public String login(String email, String password) {
@@ -43,7 +45,8 @@ public class AuthServiceImplementation implements AuthService {
         // create user related entities
         riderService.createNerRider(savedUser);
 
-//        TODO: ADD WALLET RELATED SERVICE
+        //Wallet related service
+        walletService.createNewWallet(savedUser);
 
         return modelMapper.map(savedUser, UserDTO.class);
     }
