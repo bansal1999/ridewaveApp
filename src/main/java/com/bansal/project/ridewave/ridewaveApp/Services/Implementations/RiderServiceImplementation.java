@@ -11,6 +11,7 @@ import com.bansal.project.ridewave.ridewaveApp.Exceptions.ResourceNotFoundExcept
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RideRequestRepository;
 import com.bansal.project.ridewave.ridewaveApp.Repositories.RiderRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.DriverService;
+import com.bansal.project.ridewave.ridewaveApp.Services.RatingService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RideService;
 import com.bansal.project.ridewave.ridewaveApp.Services.RiderService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.RideStrategyManager;
@@ -35,6 +36,7 @@ public class RiderServiceImplementation implements RiderService {
     private final RiderRepository riderRepository;
     private final RideService rideService;
     private final DriverService driverService;
+    private final RatingService ratingService;
 
     @Override
     @Transactional
@@ -78,7 +80,16 @@ public class RiderServiceImplementation implements RiderService {
 
     @Override
     public DriverDTO rateDriver(Long rideId, Integer rating) {
-        return null;
+        Ride ride = rideService.getRideById(rideId);
+        Rider rider = getCurrentRider();
+
+        if (!rider.equals(ride.getDriver())) {
+            throw new RuntimeException("Current Ride does not belong to current Rider");
+        }
+        if (!ride.getRideStatus().equals(RideStatus.ENDED)) {
+            throw new RuntimeException("Ride Status is not ENDED hence cannot be rated " + ride.getRideStatus());
+        }
+        return ratingService.rateDriver(ride, rating);
     }
 
     @Override
