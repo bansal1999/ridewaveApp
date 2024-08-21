@@ -5,6 +5,7 @@ import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.PaymentStatus;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Enums.TransactionMethod;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Payment;
 import com.bansal.project.ridewave.ridewaveApp.Entities.Wallet;
+import com.bansal.project.ridewave.ridewaveApp.Repositories.PaymentRepository;
 import com.bansal.project.ridewave.ridewaveApp.Services.PaymentService;
 import com.bansal.project.ridewave.ridewaveApp.Services.WalletService;
 import com.bansal.project.ridewave.ridewaveApp.Strategies.PaymentStrategy;
@@ -18,7 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CashPaymentStrategy implements PaymentStrategy {
     private final WalletService walletService;
-    private final PaymentService paymentService;
+    private final PaymentRepository paymentRepository;
 
 
     @Override
@@ -29,7 +30,8 @@ public class CashPaymentStrategy implements PaymentStrategy {
         double platformCommission = payment.getAmount() * PLATFORM_COMMISSION;
 
         walletService.deductMoney(driver.getUser(), platformCommission, null, payment.getRide(), TransactionMethod.RIDE);
-        paymentService.updatePaymentStatus(payment, PaymentStatus.CONFIRMED);
+        payment.setPaymentStatus(PaymentStatus.CONFIRMED);
+        paymentRepository.save(payment);
 
     }
 }

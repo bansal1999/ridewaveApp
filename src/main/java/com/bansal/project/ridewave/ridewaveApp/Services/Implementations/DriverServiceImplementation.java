@@ -153,4 +153,9 @@ public class DriverServiceImplementation implements DriverService {
         driver.setAvailable(availability);
         return driverRepository.save(driver);
     }
+
+    @Override
+    public Driver createNewDriver(Driver driver) {
+        return driverRepository.save(driver);
+    }
 }
