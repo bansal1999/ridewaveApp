@@ -28,8 +28,9 @@ public class RatingServiceImplementation implements RatingService {
     public DriverDTO rateDriver(Ride ride, Integer rating) {
         Driver driver = ride.getDriver();
         Rating ratingObject = ratingRepository.findByRide(ride).orElseThrow(() -> new ResourceNotFoundException("Rating not found with the id: " + ride.getId()));
+        if (ratingObject.getDriverRating() != null)
+            throw new IllegalArgumentException("Rating already exists for the ride");
         ratingObject.setDriverRating(rating);
-
         ratingRepository.save(ratingObject);
         Double newRating = ratingRepository.findByDriver(driver)
                 .stream().mapToDouble(Rating::getDriverRating)
@@ -45,11 +46,12 @@ public class RatingServiceImplementation implements RatingService {
     public RiderDTO rateRider(Ride ride, Integer rating) {
         Rider rider = ride.getRider();
         Rating ratingObject = ratingRepository.findByRide(ride).orElseThrow(() -> new ResourceNotFoundException("Rating not found with the id: " + ride.getId()));
-        ratingObject.setDriverRating(rating);
-
+        if (ratingObject.getRiderRating() != null)
+            throw new IllegalArgumentException("Rating already exists for the ride");
+        ratingObject.setRiderRating(rating);
         ratingRepository.save(ratingObject);
         Double newRating = ratingRepository.findByRider(rider)
-                .stream().mapToDouble(Rating::getDriverRating)
+                .stream().mapToDouble(Rating::getRiderRating)
                 .average().orElse(0.0);
 
         rider.setRating(newRating);
